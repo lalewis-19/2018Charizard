@@ -1,6 +1,7 @@
 package org.usfirst.frc.team5895.robot;
 
 import org.usfirst.frc.team5895.robot.lib.PathfinderFollower;
+import org.usfirst.frc.team5895.robot.lib.TrajectoryDriveController;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
@@ -69,7 +70,7 @@ public class Drivetrain {
 		//IF ONE ISN'T ON THE ROBOT ALL THE ONES AFTER IT WON'T WORK
 		try { 
 			// drive straight
-			pStraight = new TrajectoryDriveController("/home/lvuser/AutoFiles/Straight.txt", 0.0, 0, 0, 1.0/11.5, 1.0/50.0, -0.05);
+//			pStraight = new TrajectoryDriveController("/home/lvuser/AutoFiles/Straight.txt", 0.0, 0, 0, 1.0/11.5, 1.0/50.0, -0.05);
 			
 		}catch (Exception e) {
 			DriverStation.reportError("All auto files not on robot!", false);
