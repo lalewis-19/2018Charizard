@@ -20,7 +20,9 @@ public class ElectricalLayout {
     public static final int SENSOR_ARM_POTENTIOMETER = 1;
     
     //Encoders
-    public static final int ENCODER_DRIVE_LEFT = 1;
-    public static final int ENCODER_DRIVE_RIGHT =2;
+    public static final int ENCODER_DRIVE_LEFT_1 = 1;
+    public static final int ENCODER_DRIVE_LEFT_2 = 2;
+    public static final int ENCODER_DRIVE_RIGHT_1 = 3;
+    public static final int ENCODER_DRIVE_RIGHT_2 = 4;
 	
 }
