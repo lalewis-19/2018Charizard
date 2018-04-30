@@ -1,6 +1,6 @@
 package org.usfirst.frc.team5895.robot;
 
-import org.usfirst.frc.team5895.robot.lib.TrajectoryDriveController;
+import org.usfirst.frc.team5895.robot.lib.PathfinderFollower;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
