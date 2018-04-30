@@ -14,8 +14,13 @@ public class ElectricalLayout {
 	// Solenoids
     public static final int SOLENOID_ARM_LEFT = 8;
     public static final int SOLENOID_ARM_RIGHT = 9;
+    public static final int SOLENOID_ARM_BRAKE = 10;
     
     // Analog Input
     public static final int SENSOR_ARM_POTENTIOMETER = 1;
+    
+    //Encoders
+    public static final int ENCODER_DRIVE_LEFT = 1;
+    public static final int ENCODER_DRIVE_RIGHT =2;
 	
 }
