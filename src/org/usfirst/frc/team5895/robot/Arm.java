@@ -6,8 +6,10 @@ import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
+import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.interfaces.Potentiometer;
 
 public class Arm {
 	
@@ -15,7 +17,6 @@ public class Arm {
 	private Mode_Type mode = Mode_Type.DISABLED;
 	
 	private TalonSRX armMaster;
-	private VictorSPX armFollower1, armFollower2;
 	private Solenoid brakeSolenoid;
 	boolean brakeOn = false;
 	
@@ -24,21 +25,16 @@ public class Arm {
 	public static final int kTimeoutMs = 10;
 	
 	private double targetPos;
-	private double footConversion = 9.22 * Math.pow(10, -5);
-	private double carriageOffset = 0.54;
 	private double brakeTimestamp;
 	private double percentSetting;
 	
+	private Potentiometer pot;
+	
 	public Arm() {
 		
-		armMaster = new TalonSRX(1);
-		armFollower1 = new VictorSPX(2);
-		armFollower2 = new VictorSPX(3);
+		armMaster = new TalonSRX(ElectricalLayout.MOTOR_ARM);
 		
-		armFollower1.follow(armMaster);
-		armFollower2.follow(armMaster);
-		
-		brakeSolenoid = new Solenoid(1);
+		brakeSolenoid = new Solenoid(ElectricalLayout.SOLENOID_ARM_BRAKE);
 	
 		/* first choose the sensor */
 		armMaster.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, kPIDLoopIdx, kTimeoutMs);
@@ -78,37 +74,61 @@ public class Arm {
 	 	armMaster.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 10);
 		armMaster.setSelectedSensorPosition(0, 0, 10);
 		
+		pot = new AnalogPotentiometer(0, 180, 0);
+		
 	}
 	
 	/* Motion Magic */
 	/**
-	 * sets the arm to go to a specified height 
-	 * @param targetHeight the height to go to in feet
+	 * sets the arm to go to a specified position in degrees 
+	 * @param target the position to go to in degrees
 	 */
-	public void setTargetPosition(double targetHeight) {
-		targetPos = (targetHeight - carriageOffset) / footConversion;
-		if(targetPos < 0.0) {
-			targetPos = 0.0;
-		}
+	private void setTargetPosition(double target) {
+		targetPos = target;
+		if (targetPos < 0)
+			targetPos = 0;
+		if (targetPos > 180)
+			targetPos = 180;
 		brakeTimestamp = Timer.getFPGATimestamp();
 		mode = Mode_Type.DISENGAGING;
-	}	
+	}
+	
+	public void setToPosition1() {
+		setTargetPosition(0);
+	}
+	
+	public void setToPosition2() {
+		setTargetPosition(45);
+	}
+	
+	public void setToPosition3() {
+		setTargetPosition(90);
+	}
+	
+	public void setToPosition4() {
+		setTargetPosition(135);
+	}
+	
+	public void setToPosition5() {
+		setTargetPosition(180);
+	}
 	
 	/**
-	 * gets the height of the arm in feet
-	 * @return the height of the arm in feet
+	 * @return the position of the arm based off of the Potentiometer.
 	 */
-	public double getHeight() {
-		
-		return armMaster.getSelectedSensorPosition(0) * footConversion + carriageOffset; // 2048 ticks per rev, pitch diameter: 1.432in
+	public double getPosition() {
+		return pot.get();
 	}
 	
 	/**
 	 * checks if the arm is at the target position and moving slowly
+	 * checks to see if the difference between the current position and the actual position is less than
+	 * the threshold
 	 * @return true if it is both at position and with low velocity, false otherwise
 	 */
 	public boolean atTarget() {
-		return ((Math.abs(armMaster.getSelectedSensorPosition(0) - targetPos) < 200.0) 
+		int threshold = 2; // degrees
+		return ((Math.abs(getPosition() - targetPos) < threshold) 
 				&& (Math.abs(armMaster.getSelectedSensorVelocity(0)) < 1.0));
 	}
 	
