@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Timer;
 
 public class ClawHat {
-	private static enum Mode_Type {INTAKING, EJECTING, HOLDING, SPINNING_RIGHT, SPINNING_LEFT, DROPPING, DISABLED, OPEN_INTAKING};
+	private static enum Mode_Type {INTAKING, EJECTING, HOLDING, SPINNING_RIGHT, SPINNING_LEFT, DROPPING, DISABLED, OPEN_INTAKING, EJECT_LEFT, EJECT_RIGHT};
 	private Mode_Type mode = Mode_Type.DISABLED;
 	private VictorSPX leftClawMotor, rightClawMotor;
 	private AnalogInput leftClawSensor, rightClawSensor;
@@ -67,6 +67,18 @@ public class ClawHat {
 		mode= Mode_Type.EJECTING;
 		lastTime = Timer.getFPGATimestamp();
 		}
+	
+	public void ejectLeft() {
+		ejectSpeed = 1.00;
+		mode= Mode_Type.EJECT_LEFT;
+		lastTime = Timer.getFPGATimestamp();
+	}
+	
+	public void ejectRight() {
+		ejectSpeed = 1.00;
+		mode= Mode_Type.EJECT_RIGHT;
+		lastTime = Timer.getFPGATimestamp();
+	}
 	
 	public void ejectCustom(double speed){
 		ejectSpeed = speed;
@@ -141,6 +153,32 @@ public class ClawHat {
             	mode = Mode_Type.INTAKING; //if it has been waiting for 200ms, it begins to hold
             } else {
             	mode = Mode_Type.EJECTING; //if not, it keeps waiting
+            }
+			break; 
+			
+		case EJECT_LEFT:
+			leftSpeed = -ejectSpeed;
+			rightSpeed = 0;
+			isClamped = false; 
+			isTensioned = false;
+			double waitTimeLeft = Timer.getFPGATimestamp(); //stamps current time 
+            if (waitTimeLeft - lastTime > 0.6) { //compares the time we started waiting to current time
+            	mode = Mode_Type.INTAKING; //if it has been waiting for 200ms, it begins to hold
+            } else {
+            	mode = Mode_Type.EJECT_LEFT; //if not, it keeps waiting
+            }
+			break; 
+			
+		case EJECT_RIGHT:
+			leftSpeed = 0;
+			rightSpeed = ejectSpeed;
+			isClamped = false; 
+			isTensioned = false;
+			double waitTimeRight = Timer.getFPGATimestamp(); //stamps current time 
+            if (waitTimeRight - lastTime > 0.6) { //compares the time we started waiting to current time
+            	mode = Mode_Type.INTAKING; //if it has been waiting for 200ms, it begins to hold
+            } else {
+            	mode = Mode_Type.EJECT_LEFT; //if not, it keeps waiting
             }
 			break; 
 		
