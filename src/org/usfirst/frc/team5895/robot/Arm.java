@@ -74,7 +74,7 @@ public class Arm {
 	 	armMaster.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 10);
 		armMaster.setSelectedSensorPosition(0, 0, 10);
 		
-		pot = new AnalogPotentiometer(0, 180, 0);
+		pot = new AnalogPotentiometer(ElectricalLayout.SENSOR_ARM_POTENTIOMETER, 180, 0);
 		
 	}
 	
@@ -93,23 +93,23 @@ public class Arm {
 		mode = Mode_Type.DISENGAGING;
 	}
 	
-	public void setToPosition1() {
+	public void setToDown() {
 		setTargetPosition(0);
 	}
 	
-	public void setToPosition2() {
+	public void setTo45() {
 		setTargetPosition(45);
 	}
 	
-	public void setToPosition3() {
+	public void setToUp() {
 		setTargetPosition(90);
 	}
 	
-	public void setToPosition4() {
+	public void setTo45Behind() {
 		setTargetPosition(135);
 	}
 	
-	public void setToPosition5() {
+	public void setToDownBehind() {
 		setTargetPosition(180);
 	}
 	
